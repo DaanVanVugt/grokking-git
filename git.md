@@ -44,14 +44,13 @@ Daan van Vugt<sup>1</sup>, Guido Huijsmans
 
 # Outline
 ## The design of Git
+.grey[
 ## Basic commands
-## Parallel histories: branching and merging
-## Examples and use cases
-## Advanced stuff
+## Branching and merging
+## Collaboration with Git
+## Advanced stuff & extras
+]
 
----
-class: center, middle
-# The design of Git
 ---
 # Commits (snapshot of the project in time)
 .xx-large[
@@ -146,8 +145,17 @@ All images in this section from [https://git-scm.com/book/en/v2/Git-Internals-Gi
 ]
 ---
 
-class: center, middle
-# Basic commands
+# Outline
+.grey[
+## The design of Git
+]
+
+## Basic commands
+.grey[
+## Branching and merging
+## Collaboration with Git
+## Advanced stuff & extras
+]
 
 ---
 # Basic commands
@@ -165,7 +173,7 @@ $ git init . # Initializes a repository in the current folder (creates .git/)
 --
 ### Clone an existing repository
 ```bash
-$ git clone git@gitlab.com:Huijsmans/CP_fusion_2017.git # Clones the repository to CP_fusion_2017 directory
+$ git clone git@gitlab.com:Huijsmans/CP_fusion_2017.git # Create a copy
 ```
 
 ---
@@ -178,7 +186,7 @@ $ git clone git@gitlab.com:Huijsmans/CP_fusion_2017.git # Clones the repository 
 --
 .width-50.float-right[
 ```bash
-$ echo "version 1" > test.txt # Create a file
+$ echo "version 1" > test.txt # Create
 $ git add test.txt # Stage this file
 $ git commit # Commit this file
 ```
@@ -188,7 +196,7 @@ $ git commit # Commit this file
 .xx-large[
 * Makes a commit out of all files you have `git add`-ed to the staging area
 * Opens a text editor for you to write a commit message
-  * Use git commit -m "commit message here" to write on console
+  * Use `git commit -m "commit message here"` to write on console
   * (use `<ESC>:wq` to close vim)
 ]
 ---
@@ -203,7 +211,7 @@ $ git commit # Commit this file
 * Wrap subsequent lines at 72 characters
 ]
 
-### Model Git commit message
+### Model commit message
 ```
 Capitalized, short (50 chars or less) summary
 
@@ -246,7 +254,6 @@ Changes to be committed:
 
 # More examples of `git status`
 ```git
-On branch master
 Changes to be committed:
 (use "git reset HEAD <file>..." to unstage)
 
@@ -276,7 +283,6 @@ If we make another change to newfile.md, the output from `git status`
 looks like:
 
 ``` {.bash}
-On branch master
 Changes to be committed:
 (use "git reset HEAD <file>..." to unstage)
 
@@ -325,22 +331,249 @@ $ git log --oneline --decorate --graph --all # logs with a graph for all branche
 ### Inspecting the repository - `git status, git log`
 
 ---
-class: center, middle
-# Parallel histories: branching and merging
+# Outline
+.grey[
+## The design of Git
+## Basic commands
+]
+
+## Branching and merging
+
+.grey[
+## Collaboration with Git
+## Advanced stuff & extras
+]
+
 ---
 
-# 
+# Branches in Git
+.xx-large[
+* Before, we had a single, linear history of changes
+* Git allows multiple parallel timelines, called __branches__ (red)
+* This is a pointer to a commit, updated when new commits are made
+* These allow us to have multiple versions of the code at the same time
+]
 
-
-
+![Two branches](img/two-branches.png)
 
 ---
+# HEAD (a special pointer to the current branch)
+![Two branches with HEAD](img/head-to-testing.png)
 
+---
+# Manipulating branches
+```bash
+$ git branch # list branches
+$ git branch testing # create branch testing
+$ git branch -d testing # delete branch testing
+$ git checkout testing # switch to branch testing
+$ git checkout -b new_test # create a branch new_test and switch to it
+```
+---
+# Working in branches
+```bash
+$ git checkout testing # go to testing branch
+$ echo "test version" > test.txt # alter a file
+$ git commit -am "Add simple test example" # create a commit on this branch
+```
+![Advance the testing branch by one commit](img/advance-testing.png)
+.xx-large[
+* Commits advance the HEAD branch only
+]
+---
+# Going back to the previous version
+```bash
+$ git checkout master
+```
+.xx-large[
+* Change the HEAD pointer to master
+* Reset the files in your working directory
+]
+![Checkout master again](img/checkout-master.png)
+---
+
+# Making some other change (diverging branches)
+```bash
+$ echo "bugfix" > main.txt # alter a file
+$ git commit -am "bugfix" # -a: add all files and commit
+```
+![Diverging branches](img/advance-master.png)
+
+---
+# Merging these changes back together
+.xx-large[
+* Create a new commit with __two__ parents
+* Git has algorithms to merge changes within files
+* Sometimes you will be asked to decide
+]
+
+![Basic merging](img/basic-merging-2.png)
+
+```bash
+$ git checkout master
+$ git merge iss53
+```
+
+---
+# Merge conflicts
+.xx-large[
+* Happen if the same lines were changed
+* Resolve manually
+]
+
+```bash
+$ git merge iss53
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+```
+--
+
+```html
+<<<<<<< HEAD:index.html
+<div id="footer">contact : email.support@github.com</div>
+=======
+<div id="footer">
+ please contact us at support@github.com
+</div>
+>>>>>>> iss53:index.html
+```
+--
+```bash
+$ git mergetool
+```
+
+---
+# Outline
+.grey[
+## The design of Git
+## Basic commands
+## Branching and merging
+]
+
+## Collaboration with Git
+
+.grey[
+## Advanced stuff & extras
+]
+
+---
+# Sharing a repository
+.xx-large[
+* Commonly a central server hosts a repository
+* Users push new commits to this, and fetch new changes
+* `git clone` sets up a `remote` called `origin` for you
+* Branch `$branch` on the remote is called `remotes/origin/$branch`
+  * Treated as any other branch
+]
+---
+# Getting new changes from the server (fetch or pull)
+.xx-large[
+* First `fetch` new changes, updating all `remotes/origin/$branch`
+* Then `merge` these new changes
+]
+```bash
+$ git checkout master
+$ git fetch # get new commits and objects from all remotes
+$ git merge origin/master # remotes/ is optional
+```
+--
+
+```bash
+$ git pull # does a git fetch + git merge
+```
+---
+# Pushing your changes
+```bash
+$ git checkout master
+# do some work
+$ git commit
+$ git push # shorthand for git push origin master
+```
+
+.xx-large[
+* This works as long as the branches have not diverged
+* Otherwise you need to `fetch+merge` and `push` again
+]
+
+---
+# Outline
+.grey[
+## The design of Git
+## Basic commands
+## Branching and merging
+## Collaboration with Git
+]
+
+## Advanced stuff & extras
+
+---
+# Graphical interface to `git log`
+.xx-large[
+* `gitg` and `gitk` show logs in a nice graphical way
+  * Might not be installed on your machine yet
+* The GitLab site can also do this for you
+]
+
+---
+# Rebase
+.xx-large[
+* Rewrite a part of history
+* Can be used to
+  * avoid merge commits
+  * rewrite commit messages
+  * group commits together
+* `git rebase --interactive origin/master`
+* Read a blog post online if you're interested
+]
+
+---
+# `git bisect`
+.xx-large[
+* Find the place where a bug was introduced by searching history
+* Takes one known good and one known bad commit, performs a binary search
+* Find your mistake in O(log n) tries, usually 2-5
+]
+
+---
+# `git mergetool`
+.xx-large[
+* Use a (graphical) interface to help merge files
+* Easier and faster usually
+* Options:
+  * vimdiff
+  * meld (gtk)
+  * many more
+]
+
+---
 # Configuration
 ### Set your name and email address (required before making commits)
 ```bash
 git config --global user.name "Daan van Vugt"
 git config --global user.email "daanvanvugt@gmail.com"
 ```
+### Create a fancy alias for `git log`
+```bash
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset \
+-%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit`"
+```
 
 ---
+
+# Summary
+.xx-large[
+* Git stores snapshots of files in commits
+* Branches allow different versions of the code to exist
+* When they diverge you have to merge
+* Collaboration is done through `remotes`
+  * You have to `push` your changes
+  * and `fetch` new ones
+  * here conflicts may occur, use `git mergetool`
+* More complicated things are possible, google those
+]
+--
+
+## Read more
+
+[https://github.com/pluralsight/git-internals-pdf](https://github.com/pluralsight/git-internals-pdf)
