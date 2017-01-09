@@ -576,4 +576,4 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 ## Read more
 
-[https://github.com/pluralsight/git-internals-pdf](https://github.com/pluralsight/git-internals-pdf)
+[https://github.com/pluralsight/git-internals-pdf](https://github.com/pluralsight/git-internals-pdf/raw/master/drafts/peepcode-git.pdf)
