@@ -1,48 +1,8 @@
-# MobaXterm configuration
-* I made a misconfiguration, please remove the below line from ~/.bashrc
-
-~~~bash
-export PS1='\e[33;1m\u@\h \e[31m\W\e[0m\$ '
-~~~
-
----
-# Vim basics
-* Git commit drops you in vim (maybe)
-* Command mode + insert mode
-* esc to go to command mode
-* i, a, o, O, I, A to go to insert mode
-* :wq  in command mode to write + quit
-: :q! to quit without saving
-
-* Play vim-adventures.com
-
----
-# Merging
-~~~bash
-git status # then git add your own files
-git add
-git commit -m "Pre-merge commit"
-git fetch
-git merge origin/user/YourColleague
-~~~
-
-* Conflicts? Install meld (meldmerge.org)
-
-## PPPLIB fix
-~~~bash
-cd ~/source/ppplib
-make clean
-make
-cp ppplib20.a ~/local/lib/libppp20.a
-~~~
-
-
----
 class: center, middle
 # Version control with Git
-*February 2018*
+*January 2017*
 
-Daan van Vugt<sup>1</sup>
+Daan van Vugt<sup>1</sup>, Guido Huijsmans
 
 .footnote[<sup>1</sup> <daanvanvugt@gmail.com>]
 
@@ -616,4 +576,4 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 ## Read more
 
-[https://github.com/pluralsight/git-internals-pdf](https://github.com/pluralsight/git-internals-pdf/raw/master/drafts/peepcode-git.pdf)
+[https://github.com/pluralsight/git-internals-pdf](https://github.com/pluralsight/git-internals-pdf)
